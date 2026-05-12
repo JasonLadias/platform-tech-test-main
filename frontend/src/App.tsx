@@ -1,10 +1,8 @@
 import React, { useState, type ChangeEvent, type SubmitEvent } from 'react';
-
-type FormData = { name: string; message: string };
-type SubmitResponse = FormData;
+import type { SubmitFormValues, SubmitResponse } from './types';
 
 const App = () => {
-  const [formData, setFormData] = useState<FormData>({ name: '', message: '' });
+  const [formData, setFormData] = useState<SubmitFormValues>({ name: '', message: '' });
   const [response, setResponse] = useState<SubmitResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
