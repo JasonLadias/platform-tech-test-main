@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
+import classNames from 'classnames';
 import styles from './FileDropzone.module.css';
 
 const DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
@@ -51,13 +52,11 @@ const FileDropzone = ({
     onDrop,
   });
 
-  const dropzoneClassName = useMemo(() => {
-    const classes = [styles.dropzone];
-    if (isDragActive) classes.push(styles.dropzoneActive);
-    if (isDragReject) classes.push(styles.dropzoneReject);
-    if (disabled) classes.push(styles.dropzoneDisabled);
-    return classes.join(' ');
-  }, [isDragActive, isDragReject, disabled]);
+  const dropzoneClassName = classNames(styles.dropzone, {
+    [styles.dropzoneActive]: isDragActive,
+    [styles.dropzoneReject]: isDragReject,
+    [styles.dropzoneDisabled]: disabled,
+  });
 
   const handleRemove = () => {
     setRejectionError(null);
