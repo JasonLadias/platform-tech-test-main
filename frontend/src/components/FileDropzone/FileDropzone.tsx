@@ -92,6 +92,7 @@ function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
           </span>
           <span className={styles.secondaryText}>
             Up to
+            {' '}
             {formatBytes(MAX_SIZE)}
           </span>
         </div>

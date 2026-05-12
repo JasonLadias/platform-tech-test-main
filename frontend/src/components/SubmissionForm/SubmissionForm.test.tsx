@@ -14,8 +14,12 @@ const findFileInput = (): HTMLInputElement => {
   return input;
 };
 
-const mockJsonResponse = (body: unknown): Response => ({
-  ok: true,
+const mockJsonResponse = (
+  body: unknown,
+  init: { ok?: boolean; status?: number } = {},
+): Response => ({
+  ok: init.ok ?? true,
+  status: init.status ?? 200,
   json: () => Promise.resolve(body),
 } as Response);
 
@@ -111,6 +115,25 @@ describe('SubmissionForm', () => {
     const body = fetchMock.mock.calls[0][1].body as FormData;
     expect(body.get('name')).toBe('Jay');
     expect(body.get('message')).toBe('hello world');
+  });
+
+  it('surfaces server-returned field errors when the API responds 400', async () => {
+    const user = userEvent.setup();
+    fetchMock.mockResolvedValueOnce(mockJsonResponse(
+      { errors: { file: 'File exceeds 5 MB' } },
+      { ok: false, status: 400 },
+    ));
+
+    render(<SubmissionForm />);
+
+    await user.type(screen.getByLabelText(/name/i), 'Jay');
+    await user.type(screen.getByLabelText(/message/i), 'hello world');
+    await user.upload(findFileInput(), new File(['x'], 'x.txt'));
+
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+
+    expect(await screen.findByText('File exceeds 5 MB')).toBeInTheDocument();
+    expect(screen.queryByText(/^Response$/)).not.toBeInTheDocument();
   });
 
   it('renders an error alert when fetch rejects', async () => {

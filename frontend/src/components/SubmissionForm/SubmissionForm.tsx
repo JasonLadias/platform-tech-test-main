@@ -77,7 +77,17 @@ function SubmissionForm() {
       body.append('message', trimmed.message);
       body.append('file', file as File);
       const res = await fetch('/api/submit', { method: 'POST', body });
-      const data: SubmitResponse = await res.json();
+      const data = await res.json() as SubmitResponse & { errors?: FieldErrors };
+
+      if (!res.ok) {
+        if (data.errors && Object.keys(data.errors).length > 0) {
+          setErrors(data.errors);
+        } else {
+          setError(`Request failed with status ${res.status}`);
+        }
+        return;
+      }
+
       setResponse(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
