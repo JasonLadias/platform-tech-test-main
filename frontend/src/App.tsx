@@ -1,9 +1,11 @@
-import React, { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import type { SubmitFormValues, SubmitResponse } from './types';
+import FileDropzone from './components/FileDropzone/FileDropzone';
 import styles from './App.module.css';
 
 const App = () => {
   const [formData, setFormData] = useState<SubmitFormValues>({ name: '', message: '' });
+  const [file, setFile] = useState<File | null>(null);
   const [response, setResponse] = useState<SubmitResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,11 +18,11 @@ const App = () => {
     e.preventDefault();
     setError(null);
     try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const body = new FormData();
+      body.append('name', formData.name);
+      body.append('message', formData.message);
+      if (file) body.append('file', file);
+      const res = await fetch('/api/submit', { method: 'POST', body });
       const data: SubmitResponse = await res.json();
       setResponse(data);
     } catch (err) {
@@ -48,6 +50,7 @@ const App = () => {
             autoComplete="name"
           />
         </div>
+        <FileDropzone value={file} onChange={setFile} />
         <div className={styles.field}>
           <label className={styles.label} htmlFor="message">Message</label>
           <textarea

@@ -3,4 +3,8 @@ export type SubmitFormValues = {
   message: string;
 };
 
-export type SubmitResponse = SubmitFormValues;
+export type SubmitResponse = {
+  name: string;
+  message: string;
+  filePath?: string;
+};
