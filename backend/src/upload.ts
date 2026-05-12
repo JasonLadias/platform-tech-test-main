@@ -5,7 +5,7 @@ import multer from 'multer';
 import type { ErrorRequestHandler } from 'express';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const uploadsDir = path.join(__dirname, '../uploads');
+const uploadsDir = path.join(dirname, '../uploads');
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 fs.mkdirSync(uploadsDir, { recursive: true });

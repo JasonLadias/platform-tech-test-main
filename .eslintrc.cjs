@@ -12,6 +12,7 @@ module.exports = {
     '.eslintrc.cjs',
     '**/*.config.ts',
     '**/*.config.js',
+    'backend/vitest.config.ts',
   ],
   overrides: [
     {
@@ -29,6 +30,23 @@ module.exports = {
         'airbnb-typescript/base',
         'plugin:@typescript-eslint/recommended',
       ],
+    },
+    {
+      files: ['backend/**/*.test.ts', 'backend/src/__tests__/**/*.ts'],
+      env: { node: true },
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+      },
+      rules: {
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      },
     },
     {
       files: ['frontend/**/*.{ts,tsx}'],
