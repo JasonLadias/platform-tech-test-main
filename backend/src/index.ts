@@ -1,39 +1,43 @@
 import { config } from 'dotenv';
-import express, { type Request, type Response } from 'express';
-import multer from 'multer';
-import fs from 'fs';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { validateSubmission } from './validation.js';
+import {
+  upload,
+  getRelativeUploadPath,
+  removeUploadedFile,
+  handleUploadErrors,
+} from './upload.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 config({ path: path.join(__dirname, '../../.env') });
 const { BACKEND_PORT } = process.env;
 
-const uploadsDir = path.join(__dirname, '../uploads');
-fs.mkdirSync(uploadsDir, { recursive: true });
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadsDir,
-    filename: (_req, file, cb) => {
-      const unique = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      cb(null, `${unique}-${file.originalname}`);
-    },
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 },
-});
-
-const app = express()
+const app = express();
 
 app.use(express.json());
 
 app.post('/api/submit', upload.single('file'), (req: Request, res: Response) => {
-  const { name, message } = req.body;
-  const filePath = req.file
-    ? path.relative(path.join(__dirname, '..'), req.file.path)
-    : undefined;
+  const { name, message, errors } = validateSubmission(req.body, req.file);
+
+  if (Object.keys(errors).length > 0) {
+    if (req.file) removeUploadedFile(req.file);
+    res.status(400).json({ errors });
+    return;
+  }
+
+  const filePath = getRelativeUploadPath(req.file!);
   res.json({ name, message, filePath });
+});
+
+app.use(handleUploadErrors);
+
+app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  // eslint-disable-next-line no-console
+  console.error(err);
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 // eslint-disable-next-line no-console
