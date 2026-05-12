@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "concurrently -n be,fe -c blue,magenta \"npm:start-backend\" \"npm:start-frontend\"",
     "start-backend": "tsx watch backend/src/index.ts",
     "start-frontend": "vite frontend",
     "typecheck": "tsc -p backend && tsc -p frontend"
@@ -20,6 +21,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "6.0.1",
+    "concurrently": "^9.2.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vite": "8.0.10"
