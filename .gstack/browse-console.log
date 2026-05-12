@@ -1,0 +1,5 @@
+[2026-05-12T09:04:58.544Z] [debug] [vite] hot updated: /src/App.tsx
+[2026-05-12T09:04:58.564Z] [error] Received `%s` for a non-boolean attribute `%s`.
+
+If you want to write it to the DOM, pass a string instead: %s="%s" or %s={value.toString()}. true l l true l
+[2026-05-12T09:05:02.692Z] [debug] [vite] hot updated: /src/App.tsx

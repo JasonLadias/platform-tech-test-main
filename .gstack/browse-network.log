@@ -1,0 +1,2 @@
+[2026-05-12T09:04:58.541Z] GET http://localhost:3001/src/App.tsx?t=1778576698541 → 200 (3ms, 12243B)
+[2026-05-12T09:05:02.687Z] GET http://localhost:3001/src/App.tsx?t=1778576702686 → 200 (4ms, 12203B)
