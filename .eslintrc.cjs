@@ -13,6 +13,8 @@ module.exports = {
     '**/*.config.ts',
     '**/*.config.js',
     'backend/vitest.config.ts',
+    'frontend/vitest.config.ts',
+    'vitest.config.ts',
   ],
   overrides: [
     {
@@ -67,6 +69,23 @@ module.exports = {
       ],
       settings: {
         react: { version: 'detect' },
+      },
+    },
+    {
+      files: ['frontend/**/*.test.{ts,tsx}', 'frontend/src/test/**/*.{ts,tsx}'],
+      env: { browser: true, node: true },
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+      },
+      rules: {
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
       },
     },
   ],
