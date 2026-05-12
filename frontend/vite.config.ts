@@ -10,7 +10,7 @@ const { BACKEND_PORT, FRONTEND_PORT } = process.env;
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: FRONTEND_PORT,
+    port: FRONTEND_PORT ? Number(FRONTEND_PORT) : undefined,
     proxy: {
       '/api': `http://localhost:${BACKEND_PORT}`,
     },

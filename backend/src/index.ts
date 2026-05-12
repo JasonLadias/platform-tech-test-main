@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -10,7 +10,7 @@ const app = express()
 
 app.use(express.json());
 
-app.post('/api/submit', (req, res) => {
+app.post('/api/submit', (req: Request, res: Response) => {
   res.json(req.body);
 });
 

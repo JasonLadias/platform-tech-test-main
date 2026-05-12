@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, type ChangeEvent, type SubmitEvent } from 'react';
+
+type FormData = { name: string; message: string };
+type SubmitResponse = FormData;
 
 const App = () => {
-  const [formData, setFormData] = useState({ name: '', message: '' });
-  const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState<FormData>({ name: '', message: '' });
+  const [response, setResponse] = useState<SubmitResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     try {
@@ -19,10 +22,10 @@ const App = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
+      const data: SubmitResponse = await res.json();
       setResponse(data);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : String(err));
     }
   };
 
