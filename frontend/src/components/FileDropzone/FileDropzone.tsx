@@ -3,15 +3,13 @@ import { useDropzone, type FileRejection } from 'react-dropzone';
 import classNames from 'classnames';
 import styles from './FileDropzone.module.css';
 
-const DEFAULT_MAX_SIZE = 5 * 1024 * 1024;
+const MAX_SIZE = 5 * 1024 * 1024;
+const LABEL = 'Attachment';
 
 type FileDropzoneProps = {
   value: File | null;
   onChange: (file: File | null) => void;
-  maxSize?: number;
-  disabled?: boolean;
-  label?: string;
-  error?: string;
+  error: string | undefined;
 };
 
 const formatBytes = (bytes: number): string => {
@@ -23,9 +21,6 @@ const formatBytes = (bytes: number): string => {
 function FileDropzone({
   value,
   onChange,
-  maxSize = DEFAULT_MAX_SIZE,
-  disabled = false,
-  label = 'Attachment',
   error,
 }: FileDropzoneProps) {
   const [rejectionError, setRejectionError] = useState<string | null>(null);
@@ -35,7 +30,7 @@ function FileDropzone({
       if (rejections.length > 0) {
         const reason = rejections[0].errors[0];
         const message = reason?.code === 'file-too-large'
-          ? `File exceeds ${formatBytes(maxSize)}`
+          ? `File exceeds ${formatBytes(MAX_SIZE)}`
           : reason?.message ?? 'File was rejected';
         setRejectionError(message);
         return;
@@ -43,15 +38,15 @@ function FileDropzone({
       setRejectionError(null);
       if (accepted[0]) onChange(accepted[0]);
     },
-    [maxSize, onChange],
+    [onChange],
   );
 
   const {
     getRootProps, getInputProps, isDragActive, isDragReject,
   } = useDropzone({
     multiple: false,
-    maxSize,
-    disabled: disabled || value !== null,
+    maxSize: MAX_SIZE,
+    disabled: value !== null,
     onDrop,
   });
 
@@ -60,7 +55,6 @@ function FileDropzone({
   const dropzoneClassName = classNames(styles.dropzone, {
     [styles.dropzoneActive]: isDragActive,
     [styles.dropzoneReject]: isDragReject || Boolean(displayedError),
-    [styles.dropzoneDisabled]: disabled,
   });
 
   const handleRemove = () => {
@@ -70,7 +64,7 @@ function FileDropzone({
 
   return (
     <div className={styles.wrapper}>
-      <span className={styles.label}>{label}</span>
+      <span className={styles.label}>{LABEL}</span>
       {value ? (
         <div className={styles.selected}>
           <div className={styles.selectedInfo}>
@@ -81,20 +75,21 @@ function FileDropzone({
             type="button"
             className={styles.removeButton}
             onClick={handleRemove}
-            disabled={disabled}
           >
             Remove
           </button>
         </div>
       ) : (
-        <div {...getRootProps({ className: dropzoneClassName, 'aria-label': label })}>
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <div {...getRootProps({ className: dropzoneClassName, 'aria-label': LABEL })}>
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <input {...getInputProps()} />
           <span className={styles.primaryText}>
             {isDragActive ? 'Drop the file here' : 'Drag a file here, or click to browse'}
           </span>
           <span className={styles.secondaryText}>
             Up to
-            {formatBytes(maxSize)}
+            {formatBytes(MAX_SIZE)}
           </span>
         </div>
       )}

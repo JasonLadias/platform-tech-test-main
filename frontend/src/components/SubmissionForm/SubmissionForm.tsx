@@ -88,23 +88,23 @@ function SubmissionForm() {
     <>
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="name">
-            Name
+          <label className={styles.fieldLabel} htmlFor="name">
+            <span className={styles.label}>Name</span>
+            <input
+              className={classNames(styles.input, {
+                [styles.inputInvalid]: errors.name,
+              })}
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your name"
+              autoComplete="name"
+              aria-invalid={errors.name ? true : undefined}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+            />
           </label>
-          <input
-            className={classNames(styles.input, {
-              [styles.inputInvalid]: errors.name,
-            })}
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Your name"
-            autoComplete="name"
-            aria-invalid={errors.name ? true : undefined}
-            aria-describedby={errors.name ? 'name-error' : undefined}
-          />
           {errors.name && (
             <span id="name-error" className={styles.fieldError} role="alert">
               {errors.name}
@@ -117,22 +117,22 @@ function SubmissionForm() {
           error={errors.file}
         />
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="message">
-            Message
+          <label className={styles.fieldLabel} htmlFor="message">
+            <span className={styles.label}>Message</span>
+            <textarea
+              className={classNames(styles.input, {
+                [styles.inputInvalid]: errors.message,
+              })}
+              id="message"
+              name="message"
+              rows={4}
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Write a short message..."
+              aria-invalid={errors.message ? true : undefined}
+              aria-describedby={errors.message ? 'message-error' : undefined}
+            />
           </label>
-          <textarea
-            className={classNames(styles.input, {
-              [styles.inputInvalid]: errors.message,
-            })}
-            id="message"
-            name="message"
-            rows={4}
-            value={formData.message}
-            onChange={handleChange}
-            placeholder="Write a short message..."
-            aria-invalid={errors.message ? true : undefined}
-            aria-describedby={errors.message ? 'message-error' : undefined}
-          />
           {errors.message && (
             <span id="message-error" className={styles.fieldError} role="alert">
               {errors.message}
