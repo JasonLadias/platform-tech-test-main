@@ -115,6 +115,20 @@
   font-size: var(--fs-sm);
 }
 
+.fieldError {
+  font-size: var(--fs-sm);
+  color: var(--danger);
+}
+
+.inputInvalid {
+  border-color: var(--danger);
+}
+
+.inputInvalid:focus-visible {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px var(--danger-border);
+}
+
 .response {
   margin-top: var(--space-5);
   padding: var(--space-4);

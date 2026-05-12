@@ -1,27 +1,63 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import classNames from 'classnames';
 import type { SubmitFormValues, SubmitResponse } from './types';
 import FileDropzone from './components/FileDropzone/FileDropzone';
 import styles from './App.module.css';
 
+type FieldErrors = { name?: string; message?: string; file?: string };
+
+const validate = (
+  values: { name: string; message: string },
+  file: File | null,
+): FieldErrors => {
+  const errors: FieldErrors = {};
+  if (values.name.trim().length < 1) errors.name = 'Name is required';
+  if (values.message.trim().length < 5) {
+    errors.message = 'Message must be at least 5 characters';
+  }
+  if (!file) errors.file = 'Please attach a file';
+  return errors;
+};
+
 const App = () => {
   const [formData, setFormData] = useState<SubmitFormValues>({ name: '', message: '' });
   const [file, setFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const [response, setResponse] = useState<SubmitResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const nextData = { ...formData, [name]: value };
+    setFormData(nextData);
+    if (submitAttempted) {
+      setErrors(validate(nextData, file));
+    }
+  };
+
+  const handleFileChange = (next: File | null) => {
+    setFile(next);
+    if (submitAttempted) {
+      setErrors(validate(formData, next));
+    }
   };
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setSubmitAttempted(true);
+
+    const trimmed = { name: formData.name.trim(), message: formData.message.trim() };
+    const nextErrors = validate(trimmed, file);
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
     try {
       const body = new FormData();
-      body.append('name', formData.name);
-      body.append('message', formData.message);
-      if (file) body.append('file', file);
+      body.append('name', trimmed.name);
+      body.append('message', trimmed.message);
+      body.append('file', file as File);
       const res = await fetch('/api/submit', { method: 'POST', body });
       const data: SubmitResponse = await res.json();
       setResponse(data);
@@ -40,7 +76,7 @@ const App = () => {
         <div className={styles.field}>
           <label className={styles.label} htmlFor="name">Name</label>
           <input
-            className={styles.input}
+            className={classNames(styles.input, { [styles.inputInvalid]: errors.name })}
             type="text"
             id="name"
             name="name"
@@ -48,21 +84,34 @@ const App = () => {
             onChange={handleChange}
             placeholder="Your name"
             autoComplete="name"
+            aria-invalid={errors.name ? true : undefined}
+            aria-describedby={errors.name ? 'name-error' : undefined}
           />
+          {errors.name && (
+            <span id="name-error" className={styles.fieldError} role="alert">
+              {errors.name}
+            </span>
+          )}
         </div>
-        <FileDropzone value={file} onChange={setFile} />
+        <FileDropzone value={file} onChange={handleFileChange} error={errors.file} />
         <div className={styles.field}>
           <label className={styles.label} htmlFor="message">Message</label>
           <textarea
-            className={styles.input}
+            className={classNames(styles.input, { [styles.inputInvalid]: errors.message })}
             id="message"
             name="message"
             rows={4}
             value={formData.message}
             onChange={handleChange}
             placeholder="Write a short message..."
-            minLength={10}
+            aria-invalid={errors.message ? true : undefined}
+            aria-describedby={errors.message ? 'message-error' : undefined}
           ></textarea>
+          {errors.message && (
+            <span id="message-error" className={styles.fieldError} role="alert">
+              {errors.message}
+            </span>
+          )}
         </div>
         <button className={styles.button} type="submit">Submit</button>
       </form>

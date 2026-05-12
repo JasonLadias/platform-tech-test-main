@@ -11,6 +11,7 @@ type FileDropzoneProps = {
   maxSize?: number;
   disabled?: boolean;
   label?: string;
+  error?: string;
 };
 
 const formatBytes = (bytes: number): string => {
@@ -25,6 +26,7 @@ const FileDropzone = ({
   maxSize = DEFAULT_MAX_SIZE,
   disabled = false,
   label = 'Attachment',
+  error,
 }: FileDropzoneProps) => {
   const [rejectionError, setRejectionError] = useState<string | null>(null);
 
@@ -52,9 +54,11 @@ const FileDropzone = ({
     onDrop,
   });
 
+  const displayedError = error ?? rejectionError;
+
   const dropzoneClassName = classNames(styles.dropzone, {
     [styles.dropzoneActive]: isDragActive,
-    [styles.dropzoneReject]: isDragReject,
+    [styles.dropzoneReject]: isDragReject || Boolean(displayedError),
     [styles.dropzoneDisabled]: disabled,
   });
 
@@ -90,9 +94,9 @@ const FileDropzone = ({
           <span className={styles.secondaryText}>Up to {formatBytes(maxSize)}</span>
         </div>
       )}
-      {rejectionError && (
+      {displayedError && (
         <span className={styles.error} role="alert">
-          {rejectionError}
+          {displayedError}
         </span>
       )}
     </div>
