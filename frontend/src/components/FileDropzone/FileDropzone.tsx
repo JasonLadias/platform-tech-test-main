@@ -20,24 +20,23 @@ const formatBytes = (bytes: number): string => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-const FileDropzone = ({
+function FileDropzone({
   value,
   onChange,
   maxSize = DEFAULT_MAX_SIZE,
   disabled = false,
   label = 'Attachment',
   error,
-}: FileDropzoneProps) => {
+}: FileDropzoneProps) {
   const [rejectionError, setRejectionError] = useState<string | null>(null);
 
   const onDrop = useCallback(
     (accepted: File[], rejections: FileRejection[]) => {
       if (rejections.length > 0) {
         const reason = rejections[0].errors[0];
-        const message =
-          reason?.code === 'file-too-large'
-            ? `File exceeds ${formatBytes(maxSize)}`
-            : reason?.message ?? 'File was rejected';
+        const message = reason?.code === 'file-too-large'
+          ? `File exceeds ${formatBytes(maxSize)}`
+          : reason?.message ?? 'File was rejected';
         setRejectionError(message);
         return;
       }
@@ -47,7 +46,9 @@ const FileDropzone = ({
     [maxSize, onChange],
   );
 
-  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
+  const {
+    getRootProps, getInputProps, isDragActive, isDragReject,
+  } = useDropzone({
     multiple: false,
     maxSize,
     disabled: disabled || value !== null,
@@ -91,7 +92,10 @@ const FileDropzone = ({
           <span className={styles.primaryText}>
             {isDragActive ? 'Drop the file here' : 'Drag a file here, or click to browse'}
           </span>
-          <span className={styles.secondaryText}>Up to {formatBytes(maxSize)}</span>
+          <span className={styles.secondaryText}>
+            Up to
+            {formatBytes(maxSize)}
+          </span>
         </div>
       )}
       {displayedError && (
@@ -101,6 +105,6 @@ const FileDropzone = ({
       )}
     </div>
   );
-};
+}
 
 export default FileDropzone;

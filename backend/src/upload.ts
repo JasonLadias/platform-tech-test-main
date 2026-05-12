@@ -21,8 +21,7 @@ export const upload = multer({
   limits: { fileSize: MAX_FILE_SIZE },
 });
 
-export const getRelativeUploadPath = (file: Express.Multer.File): string =>
-  path.relative(path.join(__dirname, '..'), file.path);
+export const getRelativeUploadPath = (file: Express.Multer.File): string => path.relative(path.join(__dirname, '..'), file.path);
 
 export const removeUploadedFile = (file: Express.Multer.File): void => {
   fs.unlink(file.path, () => {});

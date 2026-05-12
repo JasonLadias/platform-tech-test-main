@@ -7,7 +7,9 @@
     "start": "concurrently -n be,fe -c blue,magenta \"npm:start-backend\" \"npm:start-frontend\"",
     "start-backend": "tsx watch backend/src/index.ts",
     "start-frontend": "vite frontend",
-    "typecheck": "tsc -p backend && tsc -p frontend"
+    "typecheck": "tsc -p backend && tsc -p frontend",
+    "lint": "eslint \"backend/**/*.ts\" \"frontend/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --fix \"backend/**/*.ts\" \"frontend/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "classnames": "^2.5.1",
@@ -24,8 +26,17 @@
     "@types/node": "^25.7.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "6.0.1",
     "concurrently": "^9.2.1",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vite": "8.0.10"

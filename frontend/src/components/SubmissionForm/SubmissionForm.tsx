@@ -1,7 +1,7 @@
-import { useState, type ChangeEvent, type SubmitEvent } from "react";
-import classNames from "classnames";
-import FileDropzone from "../FileDropzone/FileDropzone";
-import styles from "./SubmissionForm.module.css";
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import classNames from 'classnames';
+import FileDropzone from '../FileDropzone/FileDropzone';
+import styles from './SubmissionForm.module.css';
 
 type SubmitFormValues = {
   name: string;
@@ -21,18 +21,18 @@ const validate = (
   file: File | null,
 ): FieldErrors => {
   const errors: FieldErrors = {};
-  if (values.name.trim().length < 1) errors.name = "Name is required";
+  if (values.name.trim().length < 1) errors.name = 'Name is required';
   if (values.message.trim().length < 5) {
-    errors.message = "Message must be at least 5 characters";
+    errors.message = 'Message must be at least 5 characters';
   }
-  if (!file) errors.file = "Please attach a file";
+  if (!file) errors.file = 'Please attach a file';
   return errors;
 };
 
-const SubmissionForm = () => {
+function SubmissionForm() {
   const [formData, setFormData] = useState<SubmitFormValues>({
-    name: "",
-    message: "",
+    name: '',
+    message: '',
   });
   const [file, setFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -73,10 +73,10 @@ const SubmissionForm = () => {
 
     try {
       const body = new FormData();
-      body.append("name", trimmed.name);
-      body.append("message", trimmed.message);
-      body.append("file", file as File);
-      const res = await fetch("/api/submit", { method: "POST", body });
+      body.append('name', trimmed.name);
+      body.append('message', trimmed.message);
+      body.append('file', file as File);
+      const res = await fetch('/api/submit', { method: 'POST', body });
       const data: SubmitResponse = await res.json();
       setResponse(data);
     } catch (err) {
@@ -103,7 +103,7 @@ const SubmissionForm = () => {
             placeholder="Your name"
             autoComplete="name"
             aria-invalid={errors.name ? true : undefined}
-            aria-describedby={errors.name ? "name-error" : undefined}
+            aria-describedby={errors.name ? 'name-error' : undefined}
           />
           {errors.name && (
             <span id="name-error" className={styles.fieldError} role="alert">
@@ -131,8 +131,8 @@ const SubmissionForm = () => {
             onChange={handleChange}
             placeholder="Write a short message..."
             aria-invalid={errors.message ? true : undefined}
-            aria-describedby={errors.message ? "message-error" : undefined}
-          ></textarea>
+            aria-describedby={errors.message ? 'message-error' : undefined}
+          />
           {errors.message && (
             <span id="message-error" className={styles.fieldError} role="alert">
               {errors.message}
@@ -158,6 +158,6 @@ const SubmissionForm = () => {
       )}
     </>
   );
-};
+}
 
 export default SubmissionForm;
