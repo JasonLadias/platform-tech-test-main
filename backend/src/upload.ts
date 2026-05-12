@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import type { ErrorRequestHandler } from 'express';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadsDir = path.join(__dirname, '../uploads');
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -21,7 +21,7 @@ export const upload = multer({
   limits: { fileSize: MAX_FILE_SIZE },
 });
 
-export const getRelativeUploadPath = (file: Express.Multer.File): string => path.relative(path.join(__dirname, '..'), file.path);
+export const getRelativeUploadPath = (file: Express.Multer.File): string => path.relative(path.join(dirname, '..'), file.path);
 
 export const removeUploadedFile = (file: Express.Multer.File): void => {
   fs.unlink(file.path, () => {});

@@ -1,3 +1,4 @@
+import React from 'react';
 import SubmissionForm from './components/SubmissionForm/SubmissionForm';
 import styles from './App.module.css';
 

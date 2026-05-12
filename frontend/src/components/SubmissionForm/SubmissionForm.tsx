@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import React, { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import classNames from 'classnames';
 import FileDropzone from '../FileDropzone/FileDropzone';
 import styles from './SubmissionForm.module.css';

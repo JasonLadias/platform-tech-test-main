@@ -29,27 +29,6 @@ module.exports = {
         'airbnb-typescript/base',
         'plugin:@typescript-eslint/recommended',
       ],
-      rules: {
-        'import/prefer-default-export': 'off',
-        'import/extensions': ['error', 'ignorePackages', {
-          ts: 'never',
-          js: 'always',
-        }],
-        'no-underscore-dangle': ['error', { allow: ['__dirname', '__filename'] }],
-        '@typescript-eslint/naming-convention': [
-          'error',
-          {
-            selector: 'variable',
-            format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-            leadingUnderscore: 'allow',
-            filter: { regex: '^__(dirname|filename)$', match: false },
-          },
-        ],
-        '@typescript-eslint/no-unused-vars': [
-          'error',
-          { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
-        ],
-      },
     },
     {
       files: ['frontend/**/*.{ts,tsx}'],
@@ -70,20 +49,6 @@ module.exports = {
       ],
       settings: {
         react: { version: 'detect' },
-      },
-      rules: {
-        'react/react-in-jsx-scope': 'off',
-        'react/jsx-props-no-spreading': 'off',
-        'react/require-default-props': 'off',
-        'import/prefer-default-export': 'off',
-        'import/extensions': ['error', 'ignorePackages', {
-          ts: 'never',
-          tsx: 'never',
-        }],
-        'jsx-a11y/label-has-associated-control': [
-          'error',
-          { assert: 'either' },
-        ],
       },
     },
   ],

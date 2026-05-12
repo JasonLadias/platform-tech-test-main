@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import express, { type NextFunction, type Request, type Response } from 'express';
+import express, { type Request, type Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { validateSubmission } from './validation.js';
@@ -10,9 +10,9 @@ import {
   handleUploadErrors,
 } from './upload.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-config({ path: path.join(__dirname, '../../.env') });
+config({ path: path.join(dirname, '../../.env') });
 const { BACKEND_PORT } = process.env;
 
 const app = express();
@@ -34,7 +34,7 @@ app.post('/api/submit', upload.single('file'), (req: Request, res: Response) => 
 
 app.use(handleUploadErrors);
 
-app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: unknown, _req: Request, res: Response) => {
   // eslint-disable-next-line no-console
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
