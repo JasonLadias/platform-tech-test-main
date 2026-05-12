@@ -7,7 +7,7 @@ const App = () => {
   const [response, setResponse] = useState<SubmitResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -50,15 +50,16 @@ const App = () => {
         </div>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="message">Message</label>
-          <input
+          <textarea
             className={styles.input}
-            type="text"
             id="message"
             name="message"
+            rows={4}
             value={formData.message}
             onChange={handleChange}
-            placeholder="Write a short message"
-          />
+            placeholder="Write a short message..."
+            minLength={10}
+          ></textarea>
         </div>
         <button className={styles.button} type="submit">Submit</button>
       </form>
