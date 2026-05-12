@@ -1,28 +1,45 @@
-# TalentDesk Platform Tech Test
+# Platform Tech Test
+
+A small full-stack app: a React form on the frontend submits data to an Express backend, which stores a file and echoes the submission back. See [TASK.md](./TASK.md) for the original assignment.
 
 ## Setup
 
 ```
 cp .env.example .env
 npm i
-npm run start-backend
-npm run start-frontend
+npm start
 ```
 
-## Assignment
+`npm start` runs the backend and frontend together. They can also be run individually with `npm run start-backend` and `npm run start-frontend`.
 
-We have provided a basic application, where a form submits and the back-end returns what has been submitted.
+## Other scripts
 
-Make the following changes:
+```
+npm run typecheck   # type-check backend and frontend
+npm run lint        # lint (AirBnb config)
+npm run lint:fix    # lint and auto-fix
+npm test            # run all tests
+```
 
-1. Add styling to the form
-2. Add selecting a file to the form, this should be stored in a directory in the back-end and the path to the file returned to the front-end on submission. Selecting the file should support drag and drop
-3. Add validation to the form
-4. Add linting to the application, following AirBnb's linting rules
-5. Add front-end and back-end tests to the application
+## Libraries added
 
-You may add any relevant 3rd party libraries. Please explain why you have chosen them.
+On top of the initial setup (`express`, `react`, `react-dom`, `dotenv`, `vite`, `nodemon`):
 
-## Bonus
+**Runtime**
+- `multer` — handles `multipart/form-data` for file uploads on the backend.
+- `react-dropzone` — drag-and-drop file picker for the form.
+- `classnames` — small helper for conditional CSS class composition.
 
-Add an AI agent method (e.g. a Claude Code skill) to run linting and automatically fix any issues found
+**Tooling**
+- `typescript` + `tsx` + `@types/*` — migrated the project to TypeScript for type safety; `tsx` replaces `nodemon` to run the TS backend with watch mode.
+- `concurrently` — runs the backend and frontend in a single `npm start` command.
+
+**Testing**
+- `vitest` — fast test runner that shares Vite config.
+- `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom` — frontend component testing.
+- `supertest` — backend HTTP integration testing against the Express app.
+
+**Linting (AirBnb)**
+- `eslint` + `eslint-config-airbnb` + `eslint-config-airbnb-typescript` — AirBnb style guide as required by the task.
+- `@typescript-eslint/parser`, `@typescript-eslint/eslint-plugin` — TS support for ESLint.
+- `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, `eslint-plugin-react`, `eslint-plugin-react-hooks` — peer plugins required by the AirBnb config.
