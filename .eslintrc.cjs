@@ -70,6 +70,9 @@ module.exports = {
       settings: {
         react: { version: 'detect' },
       },
+      rules: {
+        'react/jsx-props-no-spreading': ['error', { html: 'ignore', custom: 'enforce' }],
+      },
     },
     {
       files: ['frontend/**/*.test.{ts,tsx}', 'frontend/src/test/**/*.{ts,tsx}'],

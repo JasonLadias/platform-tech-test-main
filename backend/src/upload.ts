@@ -27,7 +27,12 @@ export const removeUploadedFile = (file: Express.Multer.File): void => {
   fs.unlink(file.path, () => {});
 };
 
-export const handleUploadErrors: ErrorRequestHandler = (err, _req, res, next) => {
+export const handleUploadErrors: ErrorRequestHandler = (
+  err,
+  _req,
+  res,
+  next,
+) => {
   if (err instanceof multer.MulterError) {
     const message = err.code === 'LIMIT_FILE_SIZE'
       ? `File exceeds ${MAX_FILE_SIZE / (1024 * 1024)} MB`

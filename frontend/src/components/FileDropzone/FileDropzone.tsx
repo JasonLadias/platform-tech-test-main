@@ -18,11 +18,7 @@ const formatBytes = (bytes: number): string => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-function FileDropzone({
-  value,
-  onChange,
-  error,
-}: FileDropzoneProps) {
+function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
   const [rejectionError, setRejectionError] = useState<string | null>(null);
 
   const onDrop = useCallback(
@@ -31,7 +27,7 @@ function FileDropzone({
         const reason = rejections[0].errors[0];
         const message = reason?.code === 'file-too-large'
           ? `File exceeds ${formatBytes(MAX_SIZE)}`
-          : reason?.message ?? 'File was rejected';
+          : (reason?.message ?? 'File was rejected');
         setRejectionError(message);
         return;
       }
@@ -69,7 +65,9 @@ function FileDropzone({
         <div className={styles.selected}>
           <div className={styles.selectedInfo}>
             <span className={styles.selectedName}>{value.name}</span>
-            <span className={styles.selectedSize}>{formatBytes(value.size)}</span>
+            <span className={styles.selectedSize}>
+              {formatBytes(value.size)}
+            </span>
           </div>
           <button
             type="button"
@@ -80,12 +78,17 @@ function FileDropzone({
           </button>
         </div>
       ) : (
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <div {...getRootProps({ className: dropzoneClassName, 'aria-label': LABEL })}>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <div
+          {...getRootProps({
+            className: dropzoneClassName,
+            'aria-label': LABEL,
+          })}
+        >
           <input {...getInputProps()} />
           <span className={styles.primaryText}>
-            {isDragActive ? 'Drop the file here' : 'Drag a file here, or click to browse'}
+            {isDragActive
+              ? 'Drop the file here'
+              : 'Drag a file here, or click to browse'}
           </span>
           <span className={styles.secondaryText}>
             Up to
